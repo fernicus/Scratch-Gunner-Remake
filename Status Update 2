@@ -1,0 +1,17 @@
+Alan Bahr
+Status Update 2 (06/19/2020)
+Scratch Gunner Remake
+
+This week:
+The player character can now move using WASD and aim towards the cursor. A small sphere has been added to act as a shot, and it can create one
+clone of itself at a time by pressint the space bar, and this clone can be destroyed successfully when needed. The camera moves along with the
+player to keep the player character centered onscreen, and a bounding box has been created to keep all the game objects within.
+
+Next week:
+All these newly added objects must be refined and polished.
+
+Technical holds:
+No holds.
+
+Links:
+No links yet.
