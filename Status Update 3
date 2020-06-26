@@ -1,0 +1,17 @@
+Alan Bahr
+Status Update 3 (06/26/2020)
+Scratch Gunner Remake
+
+This week:
+The player character's aiming has been refined so that the aim is now always precise, as opposed to being precise only for angles near 0, 90, 180, and 270 degrees. By holding the space
+bar, shots can now be charged, with two levels of charge creating larger and faster shots. A model for the enemy character has been created, placed, and given its own 
+CharacterController component.
+
+Next week:
+Create new models for enemy attacks, and start getting the player and enemy to interact with each other. 
+
+Technical holds:
+No holds.
+
+Links:
+No links yet.
