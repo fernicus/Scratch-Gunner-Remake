@@ -23,3 +23,5 @@ private GameObject clone;
 		
 	}
 }
+
+// This code has been completely reworked into Create_Shot.cs.
