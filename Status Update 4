@@ -1,0 +1,18 @@
+Alan Bahr
+Status Update 3 (07/10/2020)
+Scratch Gunner Remake
+
+This week:
+A *new* new model has been made for the enemy to make the CharacterController collision make more sense. The enemy can now execute a coroutine to teleport itself to a new location, and 
+can do so within a specified time period. When the enemy is struck by the player's shot, it will swiftly teleport away to a new location on the field. It can fire a basic shot at the
+player character, and register if the player is hit by it. Both character's shots now have shot cancellation, where they will both be destroyed when shooting at each other (this may
+be removed later).
+
+Next week:
+It's finally time to start making special attack patterns!
+
+Technical holds:
+No holds.
+
+Links:
+No links.
