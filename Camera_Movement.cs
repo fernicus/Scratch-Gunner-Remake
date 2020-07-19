@@ -1,4 +1,9 @@
-﻿using System.Collections;
+﻿/*
+A very simple script to move the camera around. It will always track the 
+player's location.
+*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,6 +21,7 @@ public class Camera_Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+		// The camera's xz position always matches the player's.
 		movement.x = Shooter.transform.position.x;
 		movement.z = Shooter.transform.position.z;
 		transform.position = movement;

@@ -1,4 +1,12 @@
-﻿using System.Collections;
+﻿/*
+A script to manage the player's shots once they are created. More powerful shots
+will travel faster. Once they touch a collider that is not the player, they are
+destroyed, and if the collider they touched was the enemy, it will decrease the
+enemy's HP by an appropriate amount.
+*/
+
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 

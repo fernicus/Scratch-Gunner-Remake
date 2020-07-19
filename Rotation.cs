@@ -1,4 +1,9 @@
-﻿using System.Collections;
+﻿/*
+A script to manage the player's rotation. The player character aims by moving the mouse,
+and the character will point at the mouse's location.
+*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 

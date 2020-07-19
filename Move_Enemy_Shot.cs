@@ -1,4 +1,11 @@
-﻿using System.Collections;
+﻿/*
+A very simple script to move the enemy's standard shot. It simply moves forward
+until touching a collider that is not itself, its parent, or the enemy, at which
+point it is destroyed.
+*/
+
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -33,7 +40,9 @@ public class Move_Enemy_Shot : MonoBehaviour
 	void OnTriggerEnter(Collider other) {
 		if (other.gameObject.name == "Shooter") {
 			Debug.Log("Haha get rekt nerd");
-			
+			// This will be replaced with an appropriate way to decrement the player's 
+			// HP, but that will probably be managed by the player's script and not this one.
+			// This is mostly an artifact of collision testing.
 		}
 		
 		// The shot spawns inside itself, then moves inside the enemy. Because of this, it needs to not destroy itself

@@ -1,15 +1,20 @@
-﻿using System.Collections;
+﻿/*
+A short and simple script to move the player character around using the WASD keys and its 
+attached CharacterController.
+*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Movement : MonoBehaviour {
 
+	// speed dictates how speedily the player can move.
     public static float speed = 2.0f;
 	public Vector3 movement;
 	private CharacterController control;
 
 	void Start () {
-		// speed will likely be modified in the future for balancing purposes, and may even be changed mid-game.
 		movement = new Vector3(0.0f,0.0f,0.0f);
 		control = gameObject.GetComponent<CharacterController>();
 	}

@@ -1,4 +1,10 @@
-﻿using System.Collections;
+﻿/*
+A simple script to create the player's shots. Pressing the space bar will create a 
+shot, and holding it down will allow the player to produce faster and more 
+powerful shots!
+*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 public class Create_Shot : MonoBehaviour {
@@ -7,7 +13,12 @@ public class Create_Shot : MonoBehaviour {
 	private Vector3 movement = new Vector3(0,0,10f);
 	private GameObject Shooter;
 	private CharacterController ShooterControl;
+	
+	// chargecount tracks how long a shot is charged for, in frames.
 	public static int chargecount = 0;
+	
+	// shotdelay is reset to 0 when a shot is fired, and will increment
+	// every frame after this. A shot can only be fired when this value is 60.
 	int shotdelay = 60;
 
 	// Use this for initialization
