@@ -1,0 +1,18 @@
+Alan Bahr
+Status Update 5 (07/17/2020)
+Scratch Gunner Remake
+
+This week:
+The first special attack pattern is finished, where the enemy summons a ring of projectiles around itself and fires them in eight directions. New models for these projectiles, and a new
+coroutine for the enemy to run, were created. The enemy also now has second counter that counts down in addition to the teleport counter, and when this counter reaches 0, the enemy will
+select a random attack and use it, but it will not select the attack that was just used. 
+
+Next week:
+More attacks will be modeled and coded.
+
+Technical holds:
+No holds.
+
+Links:
+All status updates: https://github.com/thegreatab/Scratch-Gunner-Remake/tree/status-updates
+All commits: https://github.com/thegreatab/Scratch-Gunner-Remake/commits/player-code
