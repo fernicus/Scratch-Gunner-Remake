@@ -1,0 +1,21 @@
+Alan Bahr
+Status Update 6 (07/24/2020)
+Scratch Gunner Remake
+
+This week:
+The second, third, and fourth attack patterns are complete! In the second attack, the enemy will warp several times and create bursts of 4 projectiles. In the third, it will create 
+3-shot bursts directed at the player multiple times. In the fourth, it moves to the center of the arena and sprays small shots randomly in all directions. Additionally, all these
+attacks will become more aggressive as the enemy loses HP: the shots will move progressively faster, and once it drops below half HP, attack 1 will summon 12 projectiles instead of 8,
+and attack 2 will create 6 projectiles per burst instead of 4.
+
+Next week:
+More attacks will be modeled and coded, ideally up to a total of somewhere between 6 or 8. Additionally, the original Scratch Gunner had two mechanics that are still as of yet 
+unimplemented: a shield, which could block attacks for a short period before needing to recharge over time; and a small indicator showing the level of charge for a charge shot. If 
+coding remaining attack patterns goes smoothly, hopefully these can be implemented.
+
+Technical holds:
+No holds.
+
+Links:
+All status updates: https://github.com/thegreatab/Scratch-Gunner-Remake/tree/status-updates
+All commits: https://github.com/thegreatab/Scratch-Gunner-Remake/commits/player-code
