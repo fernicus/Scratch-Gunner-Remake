@@ -1,4 +1,7 @@
-﻿/*
+﻿
+// This script has been reworked into Attack_1_2, since both these patterns use the same model and move it in the same way.
+
+/*
 A simple script to move the projectiles summoned in Attack 1.
 Upon colliding with something that is not itself or the enemy, the
 projectile is destroyed.
