@@ -40,10 +40,10 @@ public class Move_Shot : MonoBehaviour
 			control.Move(transform.TransformDirection(movement));
 		}
 		
-		// If this object is a charged shot, it travels twice as fast
+		// If this object is a charged shot, it travels four times as fast
 		// as a normal shot.
 		else if(gameObject.name == "Charge Shot") {
-			control.Move(transform.TransformDirection(2 * movement));
+			control.Move(transform.TransformDirection(4 * movement));
 		}
 		
 		// If this object is a fully charged shot, it travels six times
