@@ -1,0 +1,22 @@
+Alan Bahr
+Status Update 7 (07/31/2020)
+Scratch Gunner Remake
+
+This week:
+The shield has been completely implemented! By pressing the E key, a shield appears around the player, nullifying all damage taken for 1 second. After this, the shield disappears and
+requires 2.5 seconds to recharge. The shield becoming usable again is indicated by the player flashing white for a moment. Additionally, the player character recognizes when it is hit
+by enemy attacks, granting 1 second of invincibility and causing the player to flash red during this time. The player character's model is now a handsome green color by default as well.
+
+A major issue was fixed where the enemy would never use its normal attack. This generally made its attack style much more relaxed and slow, since it would sit in place for long periods
+of time between its special attacks. Fixing a couple faulty ifs and else ifs now allows it to be as aggressive as intended.
+
+Next week:
+No new attacks were coded this week, so that's the top priority for next week. The charge indicator is really a minor gameplay element, so that will likely be on the backburner from
+here on out.
+
+Technical holds:
+No holds.
+
+Links:
+All status updates: https://github.com/thegreatab/Scratch-Gunner-Remake/tree/status-updates
+All commits: https://github.com/thegreatab/Scratch-Gunner-Remake/commits/player-code
