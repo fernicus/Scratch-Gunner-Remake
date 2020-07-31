@@ -9,6 +9,10 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour {
 
+	// 
+	PlayerColor colorscript;
+	ShieldScript shieldscript;
+
 	// speed dictates how speedily the player can move.
     public static float speed = 2.0f;
 	
@@ -31,7 +35,11 @@ public class Movement : MonoBehaviour {
 	void Start () {
 		movement = new Vector3(0.0f,0.0f,0.0f);
 		control = gameObject.GetComponent<CharacterController>();
-		shielded = invincible = shieldcharged = false;
+		shielded = invincible = false;
+		shieldcharged = true;
+		
+		colorscript =  GetComponentInChildren<PlayerColor>();
+		shieldscript = GameObject.Find("Shield").GetComponent<ShieldScript>();
 	}
 	
 
@@ -85,11 +93,14 @@ public class Movement : MonoBehaviour {
 		
 	}
 	
-	// This coroutine runs when the player takes damage.
+	// This coroutine runs when the player is hit by an attack.
 	public IEnumerator GotHit() {
-		
 		// Reduce the player's HP. If the player still has HP left, become invincible for one second.
 		HP--;
+		
+		// The player becomes red to signify taking damage.
+		colorscript.BecomeRed();
+		
 		if (HP > 0) {
 			
 			invincible = true;
@@ -98,10 +109,11 @@ public class Movement : MonoBehaviour {
 			float currenttime = 0.0f;
 		
 			// Do nothing for 1 second, then make the player vulnerable again.
-			do{
+			do
+			{
 				currenttime += Time.deltaTime;
 				yield return null;
-			}while (currenttime < 1.0f);
+			}while (currenttime <= 1.0f);
 			
 			invincible = false;
 		}
@@ -115,7 +127,9 @@ public class Movement : MonoBehaviour {
 	// When the player's shield activates, this coroutine runs. It blocks all damage
 	// taken for 1 second, before needing 2.5 seconds to recharge.
 	public IEnumerator BecomeShielded() {
-		// Discharge the shield.
+		shieldscript.ShieldActivate();
+		
+		// Discharge the shield immediately to stop it from being activated again.
 		shieldcharged = false;
 		
 		// Become invulnerable.
@@ -125,19 +139,23 @@ public class Movement : MonoBehaviour {
 		float currenttime = 0.0f;
 		
 		// Do nothing for 1 second, then drop the shield.
-		do{
+		do
+		{
 			currenttime += Time.deltaTime;
 			yield return null;
-		}while (currenttime < 1.0f);
+		}while (currenttime <= 1.0f);
 			
 		shielded = false;
 		
 		// Do nothing for 2.5 more seconds while the shield recharges.
 		currenttime = 0.0f;
-		do{
+		do
+		{
 			currenttime += Time.deltaTime;
 			yield return null;
-		}while (currenttime < 2.5f);
+		}while (currenttime <= 2.5f);
+		
+		colorscript.BecomeWhite();
 		
 		shieldcharged = true;
 		

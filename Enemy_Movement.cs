@@ -89,7 +89,7 @@ public class Enemy_Movement : MonoBehaviour
 			if(teleportthres > 0) teleportthres--;
 			if(attackthres > 0) attackthres--;
 			
-			else if (attackthres <= 0) {
+			if (attackthres <= 0) {
 				// When the attack threshold is exhausted, reset it immediately, since it will not be decremented while
 				// the enemy attacks anyways.
 				ResetAttack();
@@ -111,9 +111,9 @@ public class Enemy_Movement : MonoBehaviour
 			}				
 			
 			else if (teleportthres <= 0) {
-				// When the teleport threshold is exhausted, and if not already teleporting,
-				// start the teleport coroutine.
-				if (!teleporting) StartCoroutine(Teleport(.5f, true, true));
+				// When the teleport threshold is exhausted, start the teleport coroutine.
+				StartCoroutine(Teleport(.5f, true, true));
+				Debug.Log("Normal teleport");
 			}
 		}
     }
@@ -127,7 +127,7 @@ public class Enemy_Movement : MonoBehaviour
 	}
 	
 	void ResetAttack() {
-		attackthres = (int)Random.Range(0, 10 * HP) + 5 * HP + 240;		
+		attackthres = (int)Random.Range(0, 10 * HP) + 10 * HP + 240;		
 	}
 	
 	// This function is called from the Move_Shot script, when the player's shot connects
@@ -184,7 +184,7 @@ public class Enemy_Movement : MonoBehaviour
 			currenttime += Time.deltaTime;
 			yield return null;
 			
-		}while (currenttime > time/2 && currenttime < time);
+		}while (currenttime > time/2 && currenttime <= time);
 		
 		// Now that the teleport is completed, teleporting is false once again.
 		teleporting = false;
@@ -235,7 +235,7 @@ public class Enemy_Movement : MonoBehaviour
 			currenttime += Time.deltaTime;
 			yield return null;
 			
-		}while (currenttime > time/2 && currenttime < time);
+		}while (currenttime > time/2 && currenttime <= time);
 
 		teleporting = false;		
 	}
@@ -268,10 +268,11 @@ public class Enemy_Movement : MonoBehaviour
 		StartCoroutine(Teleport(0.5f, false, false));
 		
 		//Do nothing while teleporting, and for a short while after.
-		do{
+		do
+		{
 			currenttime += Time.deltaTime;
 			yield return null;
-		}while (currenttime < 1.0f);
+		}while (currenttime <= 1.0f);
 		
 		// Reset the current relative time after this.
 		currenttime = 0.0f;
@@ -294,7 +295,7 @@ public class Enemy_Movement : MonoBehaviour
 					currenttime += Time.deltaTime;
 					yield return null;
 					
-				}while (currenttime < speed);
+				}while (currenttime <= speed);
 					
 				currenttime = 0.0f;
 			}
@@ -313,7 +314,7 @@ public class Enemy_Movement : MonoBehaviour
 					currenttime += Time.deltaTime;
 					yield return null;
 					
-				}while (currenttime < speed);
+				}while (currenttime <= speed);
 				currenttime = 0.0f;
 			}
 			
@@ -328,7 +329,7 @@ public class Enemy_Movement : MonoBehaviour
 		
 		attacking = false;
 		
-		StartCoroutine(Teleport(0.5f, false, true));
+		StartCoroutine(Teleport(0.5f, false, false));
 	}
 	
 	// The enemy's second attack. It teleports to new locations and fires bursts of 4 projectiles, or
@@ -352,10 +353,11 @@ public class Enemy_Movement : MonoBehaviour
 			StartCoroutine(Teleport(0.5f, false, false));
 			
 			// Do nothing while teleporting, and for a short while after.
-			do{
+			do
+			{
 				currenttime += Time.deltaTime;
 				yield return null;
-			}while (currenttime < 1.0f);
+			}while (currenttime <= 1.0f);
 
 			if (HP > 10) {
 				// Select the offset and summon 4 projectiles.
@@ -383,17 +385,18 @@ public class Enemy_Movement : MonoBehaviour
 			
 			// Once the projectiles are summoned, wait a short time.
 			currenttime = 0.0f;
-			do{
+			do
+			{
 				currenttime += Time.deltaTime;
 				yield return null;
-			}while (currenttime < 0.5f);
+			}while (currenttime <= 0.5f);
 			
 		}
 		
 		// Once this is done, teleport somewhere new.
 		attacking = false;
 		
-		StartCoroutine(Teleport(0.5f, false, true));
+		StartCoroutine(Teleport(0.5f, false, false));
 		
 	}
 
@@ -414,10 +417,11 @@ public class Enemy_Movement : MonoBehaviour
 			StartCoroutine(Teleport(0.5f, false, false));
 			
 			// Do nothing while teleporting, and for a short while after.
-			do{
+			do
+			{
 				currenttime += Time.deltaTime;
 				yield return null;
-			}while (currenttime < 1.0f);			
+			}while (currenttime <= 1.0f);			
 			
 			// Summon 3 waves of projectiles per pass.
 			for (int j = 0; j < 3; j++) {
@@ -434,10 +438,11 @@ public class Enemy_Movement : MonoBehaviour
 				}
 				
 				currenttime = 0.0f;
-				do{
+				do
+				{
 					currenttime += Time.deltaTime;
 					yield return null;
-				}while (currenttime < 0.1f);
+				}while (currenttime <= 0.1f);
 			}
 			
 			// Wait a short time before teleporting once more.
@@ -445,14 +450,14 @@ public class Enemy_Movement : MonoBehaviour
 			do{
 				currenttime += Time.deltaTime;
 				yield return null;
-			}while (currenttime < 0.5f);
+			}while (currenttime <= 0.5f);
 			
 		}
 		
 		// Once this is done, teleport somewhere new.
 		attacking = false;
 		
-		StartCoroutine(Teleport(0.5f, false, true));
+		StartCoroutine(Teleport(0.5f, false, false));
 	}
 	
 	// The enemy's fourth attack. It moves to the center of the arena and sprays shots all around itself
@@ -468,10 +473,11 @@ public class Enemy_Movement : MonoBehaviour
 		StartCoroutine(TeleportTo(0,0,0.5f));
 		
 		// Do nothing while teleporting, and for a short while after.
-		do{
+		do
+		{
 			currenttime += Time.deltaTime;
 			yield return null;
-		}while (currenttime < 1.0f);
+		}while (currenttime <= 1.0f);
 		
 		// numshots is how many shots are to be created.
 		int numshots = (int)(10*Mathf.Exp(.1f * (20-HP))+40);
@@ -487,22 +493,24 @@ public class Enemy_Movement : MonoBehaviour
 			clone.transform.rotation = Quaternion.Euler(new Vector3(90,offset,0));
 			
 			currenttime = 0.0f;
-			do{
+			do
+			{
 				currenttime += Time.deltaTime;
 				yield return null;
-			}while (currenttime < 0.1f);
+			}while (currenttime <= 0.1f);
 		}
 		
 		// Wait a short time before teleporting once more.
 		currenttime = 0.0f;
-		do{
+		do
+		{
 			currenttime += Time.deltaTime;
 			yield return null;
-		}while (currenttime < 1.0f);
+		}while (currenttime <= 1.0f);
 
 		attacking = false;
 		
-		StartCoroutine(Teleport(0.5f, false, true));		
+		StartCoroutine(Teleport(0.5f, false, false));		
 		
 	}
 	
