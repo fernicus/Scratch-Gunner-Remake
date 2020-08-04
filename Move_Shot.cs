@@ -1,7 +1,7 @@
 ﻿/*
 A script to manage the player's shots once they are created. More powerful shots
-will travel faster. Once they touch a collider that is not the player, they are
-destroyed, and if the collider they touched was the enemy, it will decrease the
+will travel faster. Once they touch the arena walls or the enemy, they are
+destroyed, and if they touched the enemy, it will decrease the
 enemy's HP by an appropriate amount.
 */
 
@@ -53,9 +53,10 @@ public class Move_Shot : MonoBehaviour
 		}
     }
 	
-	// Destroys the shot when it touches a collider that is not the player, along with other effects.
+	// Destroys the shot when it touches the arena walls or the enemy, and damages the enemy.
 	void OnTriggerEnter(Collider other) {
-		if (other.gameObject.name != "Shooter") {
+		string othername = other.gameObject.name.Substring(0,4);
+		if (othername == "Cube" || othername == "Boss") {
 			Destroy(gameObject);
 		
 			// If the collider the shot touched was the enemy's, it will broadcast

@@ -1,7 +1,6 @@
 ﻿/*
 A very simple script to move the enemy's standard shot. It simply moves forward
-until touching a collider that is not itself, its parent, or the enemy, at which
-point it is destroyed.
+until touching the arena walls, at which point it is destroyed.
 */
 
 
@@ -38,9 +37,8 @@ public class Move_Enemy_Shot : MonoBehaviour
     }
 	
 	void OnTriggerEnter(Collider other) {
-		// The shot spawns inside itself, then moves inside the enemy. Because of this, it needs to not destroy itself
-		// when touching either of these.
-		if (other.gameObject.name != "Boss" && other.gameObject.name != "Enemy Shot" && other.gameObject.name != "Enemy Shot(Clone)") Destroy(gameObject);
-		
+		// The shot is destroyed when touching the walls of the arena.
+		string othername = other.gameObject.name.Substring(0,4);
+		if (othername == "Cube") Destroy(gameObject);
 	}
 }

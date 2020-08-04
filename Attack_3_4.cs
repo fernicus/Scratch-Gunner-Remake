@@ -1,8 +1,8 @@
 /*
 A simple script to move the projectiles summoned in Attacks 3 and 4.
-Upon colliding with something that is not itself or the enemy, the
-projectile is destroyed. The speed of the projectiles also increases as 
-the enemy loses more and more HP.
+Upon colliding with the arena walls, the projectile is destroyed. 
+The speed of the projectiles also increases as the enemy loses more 
+and more HP.
 */
 
 using System.Collections;
@@ -15,7 +15,7 @@ public class Attack_3_4 : MonoBehaviour
 {
 	
 	private CharacterController control;
-	private Vector3 movement = new Vector3(0.0f, 1.0f, 0.0f);
+	private Vector3 movement;
 	
 	private GameObject Enemy;
 	
@@ -36,10 +36,9 @@ public class Attack_3_4 : MonoBehaviour
 		if (gameObject.name != "Attack 3/4") control.Move(transform.TransformDirection(movement));
     }
 	
-	// The projectile is destroyed if it touches a collider other than its own or the enemy's.
+	// The projectile is destroyed if it touches the walls of the arena.
 	void OnTriggerEnter(Collider other) {
-		
-		if (other.gameObject.name != "Boss" && other.gameObject.name != "Attack 3/4" && other.gameObject.name != "Attack 3/4(Clone)") Destroy(gameObject);
-	
+		string othername = other.gameObject.name.Substring(0,4);
+		if (othername == "Cube") Destroy(gameObject);
 	}
 }

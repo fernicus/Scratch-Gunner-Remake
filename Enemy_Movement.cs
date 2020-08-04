@@ -1,9 +1,10 @@
 ﻿/*
 A large script to manage the majority of the enemy character's behavior.
 The enemy will naturally warp around the arena and fire a standard shot
-at the player, and it will also periodically perform more flashy (and difficult)
-attacks. As its HP decreases, it will do these more often. It will also react to
-being hit by the player, and teleport away when this happens.
+at the player, and it will also periodically perform flashy (and difficult)
+attacks. As its HP decreases, it will do these more often, and generally more
+aggressively. It will also react to being hit by the player, and teleport away 
+when this happens.
 */
 
 using System.Collections;
@@ -21,6 +22,12 @@ public class Enemy_Movement : MonoBehaviour
 	
 	private GameObject attack3_4_parent;
 	Attack_3_4 script2;
+	
+	private GameObject attack5_parent;
+	Attack_5 script3;
+	
+	private GameObject attack6_parent;
+	Attack_6 script4;
 	
 	// The int HP is how much health the enemy has. Much of
 	// its behavior depends on how much HP is remaining.
@@ -62,6 +69,12 @@ public class Enemy_Movement : MonoBehaviour
 		attack3_4_parent = GameObject.Find("Attack 3/4");
 		script2 = attack3_4_parent.GetComponent<Attack_3_4>();
 		
+		attack5_parent = GameObject.Find("Attack 5");
+		script3 = attack5_parent.GetComponent<Attack_5>();		
+		
+		attack6_parent = GameObject.Find("Attack 6");
+		script4 = attack6_parent.GetComponent<Attack_6>();
+		
 		attacknum = 0;
 		newattacknum = 0;
     }
@@ -69,7 +82,7 @@ public class Enemy_Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-		//if(Input.GetKeyDown("space")) StartCoroutine(Attack_3());
+		if(Input.GetKeyDown("space")) StartCoroutine(Attack_6());
 		
 		
 		// Once the enemy is defeated, this script disables itself.
@@ -97,7 +110,7 @@ public class Enemy_Movement : MonoBehaviour
 				// If not attacking already, pick a random attack and execute it (except for the attack that was previously used).
 				if (!attacking) {
 					
-					while (newattacknum == attacknum) newattacknum = Random.Range(1, 4);
+					while (newattacknum == attacknum) newattacknum = Random.Range(1, 7);
 					
 					attacknum = newattacknum;
 					
@@ -106,6 +119,12 @@ public class Enemy_Movement : MonoBehaviour
 					else if (attacknum == 2) StartCoroutine(Attack_2());
 					
 					else if (attacknum == 3) StartCoroutine(Attack_3());
+					
+					else if (attacknum == 4) StartCoroutine(Attack_4());
+					
+					else if (attacknum == 5) StartCoroutine(Attack_5());
+					
+					else if (attacknum == 6) StartCoroutine(Attack_6());
 				
 				}
 			}				
@@ -113,7 +132,6 @@ public class Enemy_Movement : MonoBehaviour
 			else if (teleportthres <= 0) {
 				// When the teleport threshold is exhausted, start the teleport coroutine.
 				StartCoroutine(Teleport(.5f, true, true));
-				Debug.Log("Normal teleport");
 			}
 		}
     }
@@ -400,7 +418,7 @@ public class Enemy_Movement : MonoBehaviour
 		
 	}
 
-	// The enemy's third attack. It teleports 4 times and fires a spray of shots at the 
+	// The enemy's third attack. It teleports to new locations 4 times and fires a spray of shots at the 
 	// player each time.
 	public IEnumerator Attack_3() {
 		// Set attacking to true immediately.
@@ -447,7 +465,8 @@ public class Enemy_Movement : MonoBehaviour
 			
 			// Wait a short time before teleporting once more.
 			currenttime = 0.0f;
-			do{
+			do
+			{
 				currenttime += Time.deltaTime;
 				yield return null;
 			}while (currenttime <= 0.5f);
@@ -461,7 +480,7 @@ public class Enemy_Movement : MonoBehaviour
 	}
 	
 	// The enemy's fourth attack. It moves to the center of the arena and sprays shots all around itself
-	// for a while.
+	// for a while, attacking for longer the lower its HP is.
 	public IEnumerator Attack_4() {
 		// Set attacking to true immediately.
 		attacking = true;
@@ -514,4 +533,145 @@ public class Enemy_Movement : MonoBehaviour
 		
 	}
 	
+	
+	// The enemy's fifth attack. It disappears, and several small shots rain down from above before exploding.
+	// As the enemy loses HP, it will drop more and more shots.
+	public IEnumerator Attack_5() {
+		// Set attacking to true immediately.
+		attacking = true;
+		
+		// The current relative time starts at 0.
+		float currenttime = 0.0f;
+		
+		// Move the enemy offscreen.
+		StartCoroutine(TeleportTo(1000,1000,0.5f));
+		
+		// Wait a half second.
+		do 
+		{
+			currenttime += Time.deltaTime;
+			yield return null;
+		}while (currenttime <= 0.5f);
+		
+		// Create shots. The number of shots increases linearly as the enemy loses HP, starting from 3 and up to
+		// a maximum of 6.
+		for (int i = 0; i < (int)Mathf.Floor((float)(15-3*HP/10)); i++) {
+			currenttime = 0.0f;
+			
+			clone = Instantiate(attack5_parent) as GameObject;
+			
+			do
+			{
+				currenttime += Time.deltaTime;
+				yield return null;
+			}while (currenttime <= 0.5f);
+			
+			
+		}
+		
+		// Wait for the last shot to explode, then teleport back into the arena.
+		currenttime = 0.0f;
+		do
+		{
+			currenttime += Time.deltaTime;
+			yield return null;
+		}while (currenttime <= 6f);
+		
+		attacking = false;
+		
+		StartCoroutine(Teleport(0.5f, false, false));
+		
+	}
+
+	// The enemy's sixth attack. It teleports to a new location and charges up, before unleashing a large and 
+	// powerful beam of shots directly at the player.
+	public IEnumerator Attack_6() {
+		// Set attacking to true immediately.
+		attacking = true;
+		
+		// The current relative time starts at 0.
+		float currenttime = 0.0f;
+		
+		// Teleport immediately to begin.
+		StartCoroutine(Teleport(0.5f, false, false));
+		
+		// Wait a short time.
+		do{
+			currenttime += Time.deltaTime;
+			yield return null;
+		}while(currenttime <= 1f);
+		
+		// Store the position of the enemy to save some trouble.
+		Vector3 originalpos = gameObject.transform.position;
+		
+		// Create 2 position vectors that are slightly offset from the original.
+		Vector3 pos1 = new Vector3(originalpos.x - 5, 0, originalpos.z);
+		Vector3 pos2 = new Vector3(originalpos.x + 5, 0, originalpos.z);
+		
+		// Do nothing while charging, but indicate charging by vibrating.
+		for (int i = 0; i < 20; i++) {
+			currenttime = 0.0f;
+			do{
+				transform.position = pos1;
+				currenttime += Time.deltaTime;
+				yield return null;	
+			}while(currenttime <= .025f);			
+			
+			currenttime = 0.0f;
+			do{
+				transform.position = originalpos;
+				currenttime += Time.deltaTime;
+				yield return null;
+			}while(currenttime <= .025f);
+			
+			currenttime = 0.0f;
+			do{
+				transform.position = pos2;
+				currenttime += Time.deltaTime;
+				yield return null;	
+			}while(currenttime <= .025f);			
+			
+			currenttime = 0.0f;
+			do{
+				transform.position = originalpos;
+				currenttime += Time.deltaTime;
+				yield return null;
+			}while(currenttime <= .025f);
+			
+		}
+		
+		// Create a large stream of Attack 6 projectiles aimed at the player's position. The beam will not
+		// track the player, only aim at their position initially.
+		Vector3 playerpos = Shooter.transform.position;
+		
+		float aimangle = 180-AngleBetween(originalpos,playerpos);
+		
+		for (int i = 0; i < 200; i++) {
+			clone = Instantiate(attack6_parent) as GameObject;
+			
+			clone.transform.position = gameObject.transform.position;
+					
+			clone.transform.rotation = Quaternion.Euler(new Vector3(0,aimangle + Random.Range(-10f,10f), 0));
+			
+			currenttime = 0.0f;
+			do 
+			{
+				currenttime += Time.deltaTime;
+				yield return null;
+			}while(currenttime <= 0.00625);
+		}
+		
+		// Once this is done, wait a short time and then teleport somewhere new.		
+		currenttime = 0.0f;
+		do
+		{
+			currenttime += Time.deltaTime;
+			yield return null;
+		}while (currenttime <= 0.5f);
+			
+		
+		attacking = false;
+		
+		StartCoroutine(Teleport(0.5f, false, false));
+	}
 }
