@@ -14,6 +14,10 @@ public class Attack_5 : MonoBehaviour
 	
 	Collider col;
 	
+	Color attackcolor = new Color(1f,0.5f,0f,1f);
+	
+	MeshRenderer rend;
+	
 	int randx;
 	int randz;
 	
@@ -24,8 +28,9 @@ public class Attack_5 : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+		
         // If this object is a clone of the original, do several things.
-		if (gameObject.name == "Attack 5(Clone)") {
+		if (name == "Attack 5(Clone)") {
 			// Move it to a random position above the player.
 			randx = Random.Range(-350, 351);
 			randz = Random.Range(-350, 351);		
@@ -37,6 +42,10 @@ public class Attack_5 : MonoBehaviour
 			// Disable its collider.
 			col = GetComponent<Collider>();
 			col.enabled = false;
+			
+			// Give it a menacing orange color.
+			rend = GetComponent<MeshRenderer>();
+			rend.material.SetColor("_Color",attackcolor);
 
 			StartCoroutine(Drop_Shot());
 		}
@@ -81,7 +90,7 @@ public class Attack_5 : MonoBehaviour
 			yield return null;
 		}while (currenttime <= 0.1f);
 		
-		// Once the shot has exploded, wait for one second and then remove it.
+		// Once the shot has exploded, wait for one second.
 		currenttime = 0.0f;
 		do
 		{
@@ -91,6 +100,7 @@ public class Attack_5 : MonoBehaviour
 		
 		currenttime = 0.0f;
 		
+		// After that, shrink and destroy the shot.
 		do 
 		{
 			transform.localScale = Vector3.Lerp(large, zero, 10 * currenttime);

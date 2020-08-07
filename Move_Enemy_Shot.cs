@@ -1,6 +1,7 @@
 ﻿/*
 A very simple script to move the enemy's standard shot. It simply moves forward
-until touching the arena walls, at which point it is destroyed.
+until touching the arena walls, at which point it is destroyed. As the enemy's HP
+gets lower, the shot travels faster.
 */
 
 
@@ -11,14 +12,18 @@ using UnityEngine;
 public class Move_Enemy_Shot : MonoBehaviour
 {
 	
+	private GameObject Enemy;
+	
 	private CharacterController control;
 	
-	private Vector3 movement = new Vector3(0,0,1.0f);
+	private Vector3 movement;
 	
     // Start is called before the first frame update
     void Start()
     {
+		Enemy = GameObject.Find("Boss");
         control = gameObject.GetComponent<CharacterController>();
+		movement = new Vector3 (0.0f,0.0f, (float)(5-0.125*Enemy.GetComponent<Enemy_Movement>().HP));
     }
 
     // Update is called once per frame

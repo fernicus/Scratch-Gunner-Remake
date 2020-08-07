@@ -14,7 +14,7 @@ public class Move_Shot : MonoBehaviour
 {
 	
 	private CharacterController control;
-	private Vector3 movement = new Vector3(0,0,-1.0f);
+	private Vector3 movement = new Vector3(0,0,-2f);
 	
 	GameObject Boss;
 	Enemy_Movement script;
@@ -60,11 +60,12 @@ public class Move_Shot : MonoBehaviour
 			Destroy(gameObject);
 		
 			// If the collider the shot touched was the enemy's, it will broadcast
-			// that the enemy was hit and inflict damage.
-			if (other.gameObject.name == "Boss"){		
-				if(gameObject.name == "Sphere(Clone)") script.HP -= 1;
-				else if(gameObject.name == "Charge Shot") script.HP -= 2;
-				else if(gameObject.name == "Super Charge Shot") script.HP -= 4;
+			// that the enemy was hit and inflict damage, but not if the enemy was already
+			// defeated.
+			if (other.gameObject.name == "Boss" && script.HP > 0){		
+				if(gameObject.name == "Sphere(Clone)") script.HP -= 0.2f;
+				else if(gameObject.name == "Charge Shot") script.HP -= 0.4f;
+				else if(gameObject.name == "Super Charge Shot") script.HP -= 0.8f;
 				script.EnemyHit();
 			}
 		}

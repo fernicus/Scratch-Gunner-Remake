@@ -13,9 +13,10 @@ public class Create_Shot : MonoBehaviour {
 	private Vector3 movement = new Vector3(0,0,10f);
 	private GameObject Shooter;
 	private CharacterController ShooterControl;
+
 	
 	// chargecount tracks how long a shot is charged for, in frames.
-	public static int chargecount = 0;
+	public int chargecount = 0;
 	
 	// shotdelay is reset to 0 when a shot is fired, and will increment
 	// every frame after this. A shot can only be fired when this value is 60.
@@ -23,6 +24,7 @@ public class Create_Shot : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		GetComponent<MeshRenderer>().material.SetColor("_Color",new Color(1f,0.3f,0.3f,1f));
 		Shooter = GameObject.Find("Shooter");
 		ShooterControl = Shooter.GetComponent<CharacterController>();
 	}
@@ -46,27 +48,27 @@ public class Create_Shot : MonoBehaviour {
 			}
 			
 			// After that, while the space bar is still being held, charge a stronger shot.
-			if (Input.GetKey("space") && chargecount < 240) chargecount++;
+			if (Input.GetKey("space") && chargecount < 360) chargecount++;
 				
-			// Releasing space after at least 120 frames, but fewer than 240 frames, will produce
+			// Releasing space after at least 120 frames, but fewer than 360 frames, will produce
 			// a charged shot. Doing this will reset the shot delay.
-			if (chargecount >= 120 && chargecount < 240 && Input.GetKeyUp("space")) {
+			if (chargecount >= 120 && chargecount < 360 && Input.GetKeyUp("space")) {
 				clone = Instantiate(gameObject) as GameObject;
 				clone.transform.position = Shooter.transform.position;
 				clone.transform.rotation = Shooter.transform.rotation;			
 				clone.name = "Charge Shot";
-				clone.transform.localScale = new Vector3(10, 10, 10);
+				clone.transform.localScale = new Vector3(20, 20, 20);
 				shotdelay = 0;
 			}
 			
-			// Releasing space after 240 or more frames produces a supercharged shot! This also
+			// Releasing space after 360 or more frames produces a supercharged shot! This also
 			// will reset the shot delay.
-			if (chargecount == 240 && Input.GetKeyUp("space")) {
+			if (chargecount == 360 && Input.GetKeyUp("space")) {
 				clone = Instantiate(gameObject) as GameObject;
 				clone.transform.position = Shooter.transform.position;
 				clone.transform.rotation = Shooter.transform.rotation;			
 				clone.name = "Super Charge Shot";
-				clone.transform.localScale = new Vector3(20, 20, 20);
+				clone.transform.localScale = new Vector3(25, 25, 40);
 				shotdelay = 0;
 			}
 		}

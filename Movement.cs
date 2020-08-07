@@ -1,6 +1,7 @@
 ﻿/*
 A script to move the player character around using the WASD keys and its 
-attached CharacterController, as well as use various other mechanics.
+attached CharacterController, as well as use various other mechanics. By pressing
+the E key, the player can summon a shield to nullify damage for 1 second. 
 */
 
 using System.Collections;
@@ -9,7 +10,7 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour {
 
-	// 
+	Create_Shot shotscript;
 	PlayerColor colorscript;
 	ShieldScript shieldscript;
 
@@ -20,7 +21,7 @@ public class Movement : MonoBehaviour {
 	private CharacterController control;
 	
 	// The player's HP starts at 5, taking 1 damage from every enemy attack.
-	int HP = 5;
+	public int HP = 5;
 	
 	// shielded and invincible both prevent the player from being damaged when true, but
 	// become true under different circumstances. shielded becomes true when the player uses 
@@ -40,39 +41,43 @@ public class Movement : MonoBehaviour {
 		
 		colorscript =  GetComponentInChildren<PlayerColor>();
 		shieldscript = GameObject.Find("Shield").GetComponent<ShieldScript>();
+		shotscript = GameObject.Find("Sphere").GetComponent<Create_Shot>();
 	}
 	
 
     void Update()
     {
-		// If the player object does not have a y-position of 0, it is changed to have one, since this is extremely important.
-		if(transform.position.y != 0) {
-			transform.position = new Vector3(transform.position.x, 0, transform.position.z);
-		}
-		
-		// The player can actually phase through the collision of the boundaries by spinning around rapidly enough ://///
-		// Until that issue is fixed (or if it cannot be fixed), these position constraints will suffice.
-		
-		if (transform.position.x < -440) transform.position = new Vector3(-440, 0, transform.position.z);
-		else if (transform.position.x > 440) transform.position = new Vector3(440, 0, transform.position.z);
+		// The player can only do any of this while they have HP.
+		if (HP > 0) {
+			// If the player object does not have a y-position of 0, it is changed to have one, since this is extremely important.
+			if(transform.position.y != 0) {
+				transform.position = new Vector3(transform.position.x, 0, transform.position.z);
+			}
+			
+			// The player can actually phase through the collision of the boundaries by spinning around rapidly enough ://///
+			// Until that issue is fixed (or if it cannot be fixed), these position constraints will suffice.
+			
+			if (transform.position.x < -440) transform.position = new Vector3(-440, 0, transform.position.z);
+			else if (transform.position.x > 440) transform.position = new Vector3(440, 0, transform.position.z);
 
-		if (transform.position.z < -440) transform.position = new Vector3(transform.position.x, 0, -440);
-		else if (transform.position.z > 440) transform.position = new Vector3(transform.position.x, 0, 440);
-		
-		// If a shot is being charged, the player's speed is halved while charging.
-		if (Create_Shot.chargecount >= 20) speed = 1.0f;
-		else speed = 2.0f;
-		
-		// When the WASD keys are not pressed, moveHorizontal and moveVertical are 0, so the movement vector will not be modified.
-        float moveHorizontal = Input.GetAxis("Horizontal");
-        float moveVertical = Input.GetAxis("Vertical");
-		movement.x = speed * moveHorizontal;
-		movement.z = speed * moveVertical;
-		// The player's CharacterController is updated.
-		control.Move(movement);
-		
-		// If the E key is pressed, and the shield is charged, activate the shield.
-		if (Input.GetKeyDown("e") && shieldcharged) StartCoroutine(BecomeShielded());
+			if (transform.position.z < -440) transform.position = new Vector3(transform.position.x, 0, -440);
+			else if (transform.position.z > 440) transform.position = new Vector3(transform.position.x, 0, 440);
+			
+			// If a shot is being charged, the player's speed is halved while charging.
+			if (shotscript.chargecount >= 20) speed = 1.0f;
+			else speed = 2.0f;
+			
+			// When the WASD keys are not pressed, moveHorizontal and moveVertical are 0, so the movement vector will not be modified.
+			float moveHorizontal = Input.GetAxis("Horizontal");
+			float moveVertical = Input.GetAxis("Vertical");
+			movement.x = speed * moveHorizontal;
+			movement.z = speed * moveVertical;
+			// The player's CharacterController is updated.
+			control.Move(movement);
+			
+			// If the E key is pressed, and the shield is charged, activate the shield.
+			if (Input.GetKeyDown("e") && shieldcharged) StartCoroutine(BecomeShielded());
+		}
 	}
 	
 	// Runs whenever the player touches another object's collider.
@@ -120,13 +125,13 @@ public class Movement : MonoBehaviour {
 		
 		// Otherwise, the player is defeated and the game ends. :(
 		
-		//else StartCoroutine(GameOver())
+		else StartCoroutine(GameOver());
 		
 	}
 	
 	// When the player's shield activates, this coroutine runs. It blocks all damage
 	// taken for 1 second, before needing 2.5 seconds to recharge.
-	public IEnumerator BecomeShielded() {
+	IEnumerator BecomeShielded() {
 		shieldscript.ShieldActivate();
 		
 		// Discharge the shield immediately to stop it from being activated again.
@@ -160,4 +165,21 @@ public class Movement : MonoBehaviour {
 		shieldcharged = true;
 		
 	}
+
+	IEnumerator GameOver() {
+		// Obviously, the player cannot produce any more shots if they have lost.
+		GameObject.Find("Sphere").GetComponent<Create_Shot>().enabled = false;
+		
+		// No more need to aim anywhere either.
+		GetComponent<Rotation>().enabled = false;
+		
+		// Normal color procedures are now disabled.
+		GetComponentInChildren<PlayerColor>().enabled = false;
+		
+		yield return null;
+		
+	}
+		
+		
+
 }

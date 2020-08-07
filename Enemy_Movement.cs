@@ -29,9 +29,14 @@ public class Enemy_Movement : MonoBehaviour
 	private GameObject attack6_parent;
 	Attack_6 script4;
 	
-	// The int HP is how much health the enemy has. Much of
+	private GameObject attack7_parent;
+	Attack_7 script5;
+	
+	MeshRenderer rend;
+	
+	// The float HP is how much health the enemy has. Much of
 	// its behavior depends on how much HP is remaining.
-	public int HP = 20;
+	public float HP = 20.0f;
 	
 	// The bools attacking and teleporting are true when the enemy
 	// attacks and teleports, respectively. This makes it so that 
@@ -73,66 +78,70 @@ public class Enemy_Movement : MonoBehaviour
 		script3 = attack5_parent.GetComponent<Attack_5>();		
 		
 		attack6_parent = GameObject.Find("Attack 6");
-		script4 = attack6_parent.GetComponent<Attack_6>();
+		script4 = attack6_parent.GetComponent<Attack_6>();		
+		
+		attack7_parent = GameObject.Find("Attack 7");
+		script5 = attack7_parent.GetComponent<Attack_7>();
 		
 		attacknum = 0;
 		newattacknum = 0;
+		
+		rend = GetComponentInChildren<MeshRenderer>();
+		rend.material.SetColor("_Color", Color.gray);
     }
 
     // Update is called once per frame
     void Update()
     {
-		if(Input.GetKeyDown("space")) StartCoroutine(Attack_6());
+		
+		// Debug line
+		if(Input.GetKeyDown("1")) StartCoroutine(Attack_6());
 		
 		
-		// Once the enemy is defeated, this script disables itself.
-		if (HP <= 0) {
-			Debug.Log("Ouchie ouch!");
-			this.enabled = false;
-		}
-		// If the enemy object does not have a y-position of 0, it is changed to have one, since this is extremely important.
-		if(transform.position.y != 0) {
-			transform.position = new Vector3(transform.position.x, 0, transform.position.z);
-		}
-		
-		// This procedure becomes suspended while the enemy is attacking or teleporting.
-        if(!attacking && !teleporting) {
+		// Once the enemy is defeated, this function stops running.
+		if (HP > 0) {
 			
-			// If the teleport counter is not exhausted, decrement it. Do the same for attackthres.
-			if(teleportthres > 0) teleportthres--;
-			if(attackthres > 0) attackthres--;
-			
-			if (attackthres <= 0) {
-				// When the attack threshold is exhausted, reset it immediately, since it will not be decremented while
-				// the enemy attacks anyways.
-				ResetAttack();
-				
-				// If not attacking already, pick a random attack and execute it (except for the attack that was previously used).
-				if (!attacking) {
-					
-					while (newattacknum == attacknum) newattacknum = Random.Range(1, 7);
-					
-					attacknum = newattacknum;
-					
-					if(attacknum == 1) StartCoroutine(Attack_1());
-					
-					else if (attacknum == 2) StartCoroutine(Attack_2());
-					
-					else if (attacknum == 3) StartCoroutine(Attack_3());
-					
-					else if (attacknum == 4) StartCoroutine(Attack_4());
-					
-					else if (attacknum == 5) StartCoroutine(Attack_5());
-					
-					else if (attacknum == 6) StartCoroutine(Attack_6());
-				
-				}
-			}				
-			
-			else if (teleportthres <= 0) {
-				// When the teleport threshold is exhausted, start the teleport coroutine.
-				StartCoroutine(Teleport(.5f, true, true));
+			// If the enemy object does not have a y-position of 0, it is changed to have one, since this is extremely important.
+			if(transform.position.y != 0) {
+				transform.position = new Vector3(transform.position.x, 0, transform.position.z);
 			}
+			
+			// This procedure becomes suspended while the enemy is attacking or teleporting.
+			if(!attacking && !teleporting) {
+				
+				// If the teleport counter is not exhausted, decrement it. Do the same for attackthres.
+				if(teleportthres > 0) teleportthres--;
+				if(attackthres > 0) attackthres--;
+				
+				if (attackthres <= 0) {
+					// When the attack threshold is exhausted, reset it immediately, since it will not be decremented while
+					// the enemy attacks anyways.
+					ResetAttack();
+					
+					// If not attacking already, pick a random attack and execute it (except for the attack that was previously used).
+					if (!attacking) {
+						
+						while (newattacknum == attacknum) newattacknum = Random.Range(1, 8);
+						
+						attacknum = newattacknum;
+						
+						if(attacknum == 1) 		 StartCoroutine(Attack_1());
+						else if (attacknum == 2) StartCoroutine(Attack_2());
+						else if (attacknum == 3) StartCoroutine(Attack_3());
+						else if (attacknum == 4) StartCoroutine(Attack_4());
+						else if (attacknum == 5) StartCoroutine(Attack_5());
+						else if (attacknum == 6) StartCoroutine(Attack_6());
+						else if (attacknum == 7) StartCoroutine(Attack_7());
+					
+					}
+				}				
+				
+				else if (teleportthres <= 0) {
+					// When the teleport threshold is exhausted, start the teleport coroutine.
+					StartCoroutine(Teleport(.5f, true, true));
+				}
+			}
+			
 		}
     }
 
@@ -141,20 +150,78 @@ public class Enemy_Movement : MonoBehaviour
 	
 	// These two functions reset their respective counters.
 	void ResetTeleport() {
-        teleportthres = (int)Random.Range(0,5 * HP) + 5 * HP + 120;
+        teleportthres = (int)Random.Range(0,(int)(5 * HP)) + (int)(5 * HP) + 240;
 	}
 	
 	void ResetAttack() {
-		attackthres = (int)Random.Range(0, 10 * HP) + 10 * HP + 240;		
+		attackthres = (int)Random.Range(0, (int)(10 * HP)) + (int)(10 * HP) + 480;		
 	}
 	
 	// This function is called from the Move_Shot script, when the player's shot connects
 	// with the enemy. When hit, the enemy swiftly teleports. It will not do this if hit while 
-	// it is already teleporting or attacking, or if it is already defeated.
+	// it is already teleporting or attacking. Once the enemy's HP is totally depleted, the 
+	// game is won!
 	public void EnemyHit() {
 		if (!teleporting && !attacking && HP > 0){
 			StartCoroutine(Teleport(0.25f, false, false));
 		}
+		else if (HP <= 0) {
+			StopAllCoroutines();
+			StartCoroutine(YouWon());
+		}
+	}
+	
+	
+	// This coroutine runs when the enemy's HP is depleted. It is purely cinematic.
+	public IEnumerator YouWon() {
+		Vector3 large = new Vector3(5,5,5);
+		Vector3 small = new Vector3(0,0,0);
+		Vector3 evenlarger = new Vector3 (10,10,10);
+		Debug.Log("You won!");
+		
+		float currenttime = 0.0f;
+		
+		for (int i = 0; i < 50; i++) {
+			StartCoroutine(Teleport(0.1f, false, false));
+			
+			currenttime = 0.0f;
+			do{
+				currenttime += Time.deltaTime;
+				yield return null;
+			}while(currenttime<= 0.2f);
+			
+		}
+		
+		StartCoroutine(TeleportTo(0,0,0.1f));
+
+		currenttime = 0.0f;
+		
+		do{
+			currenttime += Time.deltaTime;
+			yield return null;
+		}while(currenttime <= 1.5f);
+		
+		
+		currenttime = 0.0f;
+		
+		do{
+			transform.localScale = Vector3.Lerp(large, evenlarger, currenttime / 5);
+			
+			rend.material.SetColor("_Color", Color.Lerp(Color.gray, Color.red, currenttime / 15)); 
+			
+			currenttime += Time.deltaTime;
+			yield return null;
+		}while(currenttime <= 5f);
+		
+		currenttime = 0.0f;
+		
+		do{
+			transform.localScale = Vector3.Lerp(evenlarger, small, 10 * currenttime);
+			currenttime += Time.deltaTime;
+			yield return null;
+		}while(currenttime <= 0.1f);
+		
+		Destroy(gameObject);
 	}
 	
 	// This function calculates the angle between two points. It comes up a lot, and Transform.LookAt is screwy sometimes,
@@ -179,30 +246,41 @@ public class Enemy_Movement : MonoBehaviour
 		// large and small are two scale vectors, with large being the enemy's normal size
 		// and small being a scale of 0 for when it teleports.
 		Vector3 large = new Vector3(5,5,5);
-		Vector3 small = new Vector3(0,0,0);
+		Vector3 small = new Vector3(0.5f,0.5f,0.5f);
 		
-		// For the first half of the allotted time, shrink the enemy down until it has a scale of 0.
+		// For the first 40% of the allotted time, shrink the enemy down until it has a scale of 0.
 		do 
 		{
-			transform.localScale = Vector3.Lerp(large, small, 2 *currenttime / time);
+			transform.localScale = Vector3.Lerp(large, small, 5 * currenttime / (2 * time));
 			currenttime += Time.deltaTime;
 			yield return null;
 			
-		}while (currenttime <= time/2);
+		}while (currenttime <= 2*time/5);
 		
 		// Now that the enemy is no longer visible, move it to a new random location.
 		int newx = Random.Range(-378, 379);
 		int newz = Random.Range(-378,379);
-		transform.position = new Vector3(newx, 0, newz);
+		Vector3 newpos = new Vector3(newx, 0, newz);
+		Vector3 currentpos = transform.position;
 		
-		// For the second half of the allotted time, make the enemy grow back to its normal size.
+		// Use 20% of the allotted time to move the enemy.
+		currenttime = 0.0f;
+		do
+		{
+			transform.position = Vector3.Lerp(currentpos,newpos, 5 * currenttime / time);
+			currenttime += Time.deltaTime;
+			yield return null;
+		}while (currenttime <= time/5);
+		
+		// For the final 40% of the allotted time, make the enemy grow back to its normal size.
+		currenttime = 0.0f;
 		do 
 		{
-			transform.localScale = Vector3.Lerp(small, large, 2 * (currenttime - time/2)/ time);
+			transform.localScale = Vector3.Lerp(small, large, 5 * currenttime / (2 * time));
 			currenttime += Time.deltaTime;
 			yield return null;
 			
-		}while (currenttime > time/2 && currenttime <= time);
+		}while (currenttime <= 2*time/5);
 		
 		// Now that the teleport is completed, teleporting is false once again.
 		teleporting = false;
@@ -237,25 +315,33 @@ public class Enemy_Movement : MonoBehaviour
 
 		do 
 		{
-			transform.localScale = Vector3.Lerp(large, small, 2 *currenttime / time);
+			transform.localScale = Vector3.Lerp(large, small, 5 *currenttime / (2 * time));
 			currenttime += Time.deltaTime;
 			yield return null;
 			
-		}while (currenttime <= time/2);
+		}while (currenttime <= 2*time/5);
 		
 		// Now that the enemy is no longer visible, move it to the designated location, instead of 
 		// a random location.
-		transform.position = new Vector3(x, 0, z);
+		Vector3 newpos = new Vector3(x, 0, z);
+		Vector3 currentpos = transform.position;
 
+		currenttime = 0.0f;
+		do
+		{
+			transform.position = Vector3.Lerp(currentpos,newpos, 5 * currenttime / time);
+			currenttime += Time.deltaTime;
+			yield return null;
+		}while (currenttime <= time/5);
+		
+		currenttime = 0.0f;
 		do 
 		{
-			transform.localScale = Vector3.Lerp(small, large, 2 * (currenttime - time/2)/ time);
+			transform.localScale = Vector3.Lerp(small, large, 5 * currenttime / (2 * time));
 			currenttime += Time.deltaTime;
 			yield return null;
 			
-		}while (currenttime > time/2 && currenttime <= time);
-
-		teleporting = false;		
+		}while (currenttime <= 2*time/5);
 	}
 	
 	
@@ -359,9 +445,6 @@ public class Enemy_Movement : MonoBehaviour
 		// The current relative time starts at 0.
 		float currenttime = 0.0f;
 		
-		Vector3 large = new Vector3(5,5,5);
-		Vector3 small = new Vector3(0,0,0);
-		
 		// The bursts of shots will be randomly offset by either 0 or 45 degrees (or 0 to 30 degrees
 		// if HP is below half).
 		float offset;
@@ -383,6 +466,7 @@ public class Enemy_Movement : MonoBehaviour
 				
 				for (int j = 0; j < 4; j++) {
 					clone = Instantiate(attack1_2_parent) as GameObject;
+					clone.transform.localScale = new Vector3(2,2,2);
 					clone.transform.position = gameObject.transform.position;
 					clone.transform.eulerAngles = new Vector3(90f, 90f * j + offset, 0f);		
 					
@@ -396,6 +480,7 @@ public class Enemy_Movement : MonoBehaviour
 				for (int j = 0; j < 6; j++) {
 					clone = Instantiate(attack1_2_parent) as GameObject;
 					clone.transform.position = gameObject.transform.position;
+					clone.transform.localScale = new Vector3(2,2,2);
 					clone.transform.eulerAngles = new Vector3(90f, 60f * j + offset, 0f);		
 					
 				}
@@ -426,10 +511,7 @@ public class Enemy_Movement : MonoBehaviour
 		
 		// The current relative time starts at 0.
 		float currenttime = 0.0f;
-		
-		Vector3 large = new Vector3(5,5,5);
-		Vector3 small = new Vector3(0,0,0);
-		
+
 		// Do this procedure 4 times.
 		for (int i = 0; i < 4; i++) {
 			StartCoroutine(Teleport(0.5f, false, false));
@@ -447,11 +529,11 @@ public class Enemy_Movement : MonoBehaviour
 				// Summon 3 projectiles at once.
 				for (int k = -1; k < 2; k++) {
 					clone = Instantiate(attack3_4_parent) as GameObject;
-					clone.transform.position = gameObject.transform.position;
 					
 					Vector3 enemypos = gameObject.transform.position;
 					Vector3 playerpos = Shooter.transform.position;
 					
+					clone.transform.position = enemypos;
 					clone.transform.rotation = Quaternion.Euler(new Vector3(90,25*k+270-AngleBetween(enemypos,playerpos), 0));
 				}
 				
@@ -670,6 +752,53 @@ public class Enemy_Movement : MonoBehaviour
 		}while (currenttime <= 0.5f);
 			
 		
+		attacking = false;
+		
+		StartCoroutine(Teleport(0.5f, false, false));
+	}
+	
+	// The enemy's seventh attack. It teleports to new locations and creates lethargic projectiles that
+	// follow sinusoidal paths and leave behind damaging trails. As it loses HP, it will create more projectiles.
+	public IEnumerator Attack_7() {
+		// Set attacking to true immediately.
+		attacking = true;
+		
+		// The current relative time starts at 0.
+		float currenttime = 0.0f;	
+		
+		// Do this procedure a number of times.
+		for (int i = 0; i < (int)(11 - .25 * HP); i++) {
+			
+			StartCoroutine(Teleport(0.5f, false, false));
+			
+			// Do nothing while teleporting, and for a short time after.
+			currenttime = 0.0f;
+			do
+			{
+				currenttime += Time.deltaTime;
+				yield return null;
+			}while (currenttime <= .75f);
+			
+			Vector3 enemypos = gameObject.transform.position;
+			Vector3 playerpos = Shooter.transform.position;
+					
+			clone = Instantiate(attack7_parent) as GameObject;
+			clone.transform.position = enemypos;
+			
+			clone.transform.rotation = Quaternion.Euler(new Vector3(0,180-AngleBetween(enemypos,playerpos), 0));
+
+			// After the projectile is summoned, wait a short time before
+			// teleporting again.
+			currenttime = 0.0f;
+			do
+			{
+				currenttime += Time.deltaTime;
+				yield return null;
+			}while (currenttime <= 0.25f);			
+			
+		}
+		
+		// Once this is done, teleport somewhere new.
 		attacking = false;
 		
 		StartCoroutine(Teleport(0.5f, false, false));

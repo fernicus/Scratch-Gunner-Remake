@@ -1,7 +1,7 @@
 ﻿/*
-A simple script to manage the shield model. It is purely cosmetic and has no effect on gameplay,
-but it looks pretty! When the player activates the shield, it scales itself up to size, and when
-it is exhausted it disappears once more.
+A simple script to manage the shield model. The model itself is purely cosmetic and has no effect 
+on gameplay, but it looks pretty! When the player activates the shield, it scales itself up to size,
+and when it is exhausted it disappears once more.
 */
 
 using System.Collections;
@@ -26,6 +26,7 @@ public class ShieldScript : MonoBehaviour
 		small  = new Vector3(0,0,0);	
         shieldrend = GetComponent<MeshRenderer>();
 		shieldrend.material.SetColor("_Color", Color.cyan);
+		shieldrend.enabled = false;
 		
 		transform.localScale = small;
 		
@@ -49,6 +50,8 @@ public class ShieldScript : MonoBehaviour
 
 	// Makes the shield model visible for 1 second.
 	IEnumerator ShieldRoutine() {
+		// Enable the mesh renderer.
+		shieldrend.enabled = true;
 
 		// The current relative time starts at 0.
 		float currenttime = 0.0f;
@@ -81,7 +84,8 @@ public class ShieldScript : MonoBehaviour
 			
 		}while (currenttime <= 0.05f);
 		
-		
+		// Disable the mesh renderer.
+		shieldrend.enabled = false;
 		
 	} 
 }

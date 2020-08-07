@@ -22,7 +22,7 @@ public class Attack_6 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (gameObject.name != "Attack 3/4") control.Move(transform.TransformDirection(movement));
+        if (gameObject.name == "Attack 6(Clone)") control.Move(transform.TransformDirection(movement));
     }
 	
 	void OnTriggerEnter(Collider other) {

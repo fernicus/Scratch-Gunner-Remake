@@ -33,7 +33,7 @@ public class Attack_3_4 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-		if (gameObject.name != "Attack 3/4") control.Move(transform.TransformDirection(movement));
+		if (gameObject.name == "Attack 3/4(Clone)") control.Move(transform.TransformDirection(movement));
     }
 	
 	// The projectile is destroyed if it touches the walls of the arena.

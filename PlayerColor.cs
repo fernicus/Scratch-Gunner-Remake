@@ -24,10 +24,7 @@ public class PlayerColor : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    void Update() {}
 	
 	// Called from the Movement script, this function just starts the TookDamage
 	// coroutine.
@@ -69,8 +66,6 @@ public class PlayerColor : MonoBehaviour
 		
 		}
 	}
-	
-	
 	
 	// Called from the Movement script, this function just starts the ShieldCharged
 	// coroutine.
