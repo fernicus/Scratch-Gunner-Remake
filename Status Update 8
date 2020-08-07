@@ -1,0 +1,35 @@
+Alan Bahr
+Status Update 8 (08/07/2020)
+Scratch Gunner Remake
+
+This week: A lot of stuff happened!
+- The fifth, sixth, and seventh attack patterns are complete! In the fifth, the enemy disappears and drops multiple small shots onto the player, which are harmless at first but soon
+  explode. In the sixth, the enemy charges in place for a few seconds before unleashing a large stream of projectiles at the player. In the seventh, the enemy creates several lethargic
+  projectiles which follow sinusoidal paths, leaving damaging trails behind.
+  
+- The player's charged shots are now much larger, and all the player's shots move twice as fast as before. A charge indicator has been added, which will appear when charged shots are
+  ready. It will be small when the shot is partially charged, and larger when fully charged. Otherwise, it is invisible.
+
+- A short cinematic now plays out when the enemy's HP is depleted. Similarly, the player now loses all functionality upon losing all HP. What happens cinematically past this point is 
+  not yet completed.
+  
+- Various collision problems have been fixed. All projectiles are now destroyed if and only if they collide with the arena's walls, with player shots also being destroyed upon hitting 
+  the enemy. The player's uncharged shots now no longer get stuck behind the player for a moment when they are not moving.
+  
+- Many models now have special materials and colors applied to them, so that they are more visually appealing than the generic gray Unity textures.
+
+- The enemy's standard attacking procedure is slowed down to a more reasonable level for normal gameplay, so that it will not bombard the player with many special attacks back to back.
+  However, its normal shot now will travel faster the less HP it has.
+
+- The enemy's teleportation is revamped. Instead of simply disappearing and reappearing somewhere else, it will shrink down and visibly move to the new location, before growing back to
+  normal size. In this way, even if it teleports offscreen, the player should still have an idea of where it went and will not be blindsided by attacks from out of nowhere.
+
+Next week:
+Presentation time. After that, it's probably onto general aesthetic improvements.
+
+Technical holds:
+No holds.
+
+Links:
+All status updates: https://github.com/thegreatab/Scratch-Gunner-Remake/tree/status-updates
+All commits: https://github.com/thegreatab/Scratch-Gunner-Remake/commits/player-code
