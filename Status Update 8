@@ -7,9 +7,10 @@ This week: A lot of stuff happened!
   explode. In the sixth, the enemy charges in place for a few seconds before unleashing a large stream of projectiles at the player. In the seventh, the enemy creates several lethargic
   projectiles which follow sinusoidal paths, leaving damaging trails behind.
   
-- The player's charged shots are now much larger, and all the player's shots move twice as fast as before. A charge indicator has been added, which will appear when charged shots are
-  ready. It will be small when the shot is partially charged, and larger when fully charged. Otherwise, it is invisible.
-
+- The player's charged shots are now much larger, and all the player's shots move twice as fast as before. However, shots now take longer to fully charge: 6 seconds instead of 4. A 
+  charge indicator has been added, which will appear when charged shots are ready. It will be small when the shot is partially charged, and larger when fully charged. Otherwise, it is
+  invisible.
+  
 - A short cinematic now plays out when the enemy's HP is depleted. Similarly, the player now loses all functionality upon losing all HP. What happens cinematically past this point is 
   not yet completed.
   
